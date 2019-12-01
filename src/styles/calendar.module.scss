@@ -1,0 +1,87 @@
+.recalendar {
+  background: white;
+
+  .table {
+    width: 100%;
+    border-spacing: 0;
+  }
+
+  .row {
+    display: flex;
+    justify-content: space-around;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    max-height: 125px;
+
+    transition: ease all 0.15s;
+    &:not(.ready) {
+      height: 0;
+      // overflow-y: hidden;
+    }
+  }
+
+  .column {
+    flex-grow: 1;
+    color: orangered;
+    border-right: 1px solid black;
+    transition: ease all 0.15s;
+    // padding: .5rem .25rem;
+    padding: 0;
+
+    width: calc(100% / 7);
+
+    &:last-of-type {
+      border-right: none;
+    }
+
+    &.header {
+      text-align: center;
+    }
+
+    &:not(.this-month):not(.header) {
+      .date-number {
+        background: gray;
+      }
+      color: gray;
+    }
+
+    &.selected {
+      background: yellow;
+    }
+
+    &.today {
+      background: green;
+    }
+
+    .day-head {
+      text-align: right;
+      padding: 0.35rem 0;
+    }
+
+    .date-number {
+      background: green;
+      color: white;
+      padding: 0.35rem;
+      border-bottom-left-radius: 0.5rem;
+      //border-top-right-radius: 0;
+      //border-top-left-radius: 50%;
+      //border-bottom-left-radius: 50%;
+      //border-bottom-right-radius: 50%;
+    }
+
+    .events {
+      display: table-caption;
+      table-layout: fixed;
+      color: black;
+      margin: 5px;
+      overflow: hidden;
+    }
+
+    .event {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow-x: hidden;
+    }
+  }
+}

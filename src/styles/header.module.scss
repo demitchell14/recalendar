@@ -1,0 +1,53 @@
+.title {
+  display: flex;
+  color: black;
+  border: 1px solid black;
+  margin: 0;
+  // padding: 1rem .5rem;
+  align-items: center;
+  justify-content: space-between;
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 0;
+    padding: 1rem 0.5rem;
+  }
+
+  .body {
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .page {
+    display: flex;
+    padding: 0 0.5rem;
+    align-self: stretch;
+    background: #ececec;
+    transition: ease all 0.2s;
+    border: 0;
+
+    img {
+      transition: ease all 0.2s;
+      align-self: center;
+    }
+
+    &:hover {
+      background: #ecd2ff;
+      img {
+        transform: scale(1.2);
+      }
+    }
+
+    &:focus {
+      outline: 0;
+      box-shadow: 0 0 2px 2px #f47af9;
+      img {
+        transform: scale(1.1);
+      }
+    }
+  }
+}
