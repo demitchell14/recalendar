@@ -2,6 +2,24 @@
   "name": "recalendar",
   "version": "0.1.0",
   "description": "",
+  "author": "Devin Mitchell (http://github.com/demitchell14)",
+  "license": "MIT",
+  "contributors": [
+    "Devin Mitchell (http://github.com/demitchell14)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/demitchell14/recalendar.git"
+  },
+  "bugs": {
+    "url": "https://github.com/demitchell14/recalendar/issues"
+  },
+  "homepage": "https://github.com/demitchell14/recalendar",
+  "keywords": [
+    "react",
+    "reactjs",
+    "calendar"
+  ],
   "main": "index.js",
   "types": "types.d.ts",
   "scripts": {
@@ -16,9 +34,6 @@
     "test:jest": "echo \"Error: no test specified\" && exit 1",
     "lint": "./node_modules/.bin/tslint --config tslint.json --format stylish --project . --fix"
   },
-  "keywords": [],
-  "author": "Devin Mitchell (http://github.com/demitchell14)",
-  "license": "MIT",
   "husky": {
     "hooks": {
       "pre-commit": "pretty-quick --staged"
