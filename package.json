@@ -21,7 +21,7 @@
     "calendar"
   ],
   "main": "index.js",
-  "types": "types.d.ts",
+  "types": "types/src/types.d.ts",
   "scripts": {
     "test": "npm run lint",
     "build:demo": "npm run remove:demo && webpack --config ./webpack.config.js",

@@ -16,7 +16,7 @@ export default function EventComponent(props: EventProps): JSX.Element {
   };
 
   return (
-    <div onClick={onClick} onMouseDown={sendPrevent} className={styles.event}>
+    <div onClick={onClick} onMouseDown={sendPrevent} className={styles['event']}>
       {props.title}
     </div>
   );

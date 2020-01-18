@@ -7,7 +7,7 @@ module.exports = {
     entry: "./examples/index.tsx",
     mode: "production",
     output: {
-        path: path.resolve(__dirname, "docs", "javascripts"),
+        path: path.resolve(__dirname, "docs", "js"),
         filename: "[name]-[contenthash].js"
     },
     module: {

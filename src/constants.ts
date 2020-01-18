@@ -26,6 +26,7 @@ export const months: DayAndMonthArray[] = [
 
 export function startOfDay(date: Date | string): Date {
   date = new Date(date.valueOf());
+  // date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
   date.setHours(0);
   date.setMinutes(0);
   date.setSeconds(0);

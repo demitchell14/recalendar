@@ -3,8 +3,8 @@ import { RefObject, useCallback, useEffect, useRef, useState } from "react";
 import classnames from "classnames";
 
 import Day from "./DayComponent";
-import { startOfDay } from "./constants";
-import { RowProps, StateObject, Dimensions } from "./interfaces";
+import {addDays, startOfDay} from "./constants";
+import {RowProps, StateObject, Dimensions, CalendarEvent} from "./interfaces";
 import styles from "./styles/calendar.module.scss";
 
 export default function RowComponent(props: RowProps): JSX.Element {
@@ -17,7 +17,9 @@ export default function RowComponent(props: RowProps): JSX.Element {
     isSelecting,
     selectedDates,
     events,
-    eventClicked
+    eventClicked,
+    abbreviated,
+      calendarRef,
   } = props;
 
   const [rowDimensions, setRowDimensions] = useState({
@@ -35,10 +37,11 @@ export default function RowComponent(props: RowProps): JSX.Element {
 
   const resizeRow: (element: HTMLTableRowElement | null) => void = (element) => {
     if (element && element.cells.length > 0) {
-      const calendar: HTMLTableElement | null = document.querySelector(`.${styles.recalendar}`);
-      if (calendar) {
+      if (calendarRef.current) {
+        let borderWidth: string|number = getComputedStyle(element, null).borderLeftWidth; // .getPropertyValue('border-left-width');
+        borderWidth = Number.parseFloat(borderWidth.substr(0, borderWidth.indexOf('px')));
         setRowDimensions({
-          width: calendar.offsetWidth,
+          width: calendarRef.current.offsetWidth - (borderWidth as number * 2),
           height: element.cells[0].offsetWidth
         });
       }
@@ -46,13 +49,18 @@ export default function RowComponent(props: RowProps): JSX.Element {
   };
 
   const resizeCell: (element: HTMLTableCellElement | null) => void = (element) => {
+
     if (element) {
       const title: HTMLDivElement | null = element.querySelector(`.${styles["day-head"]}`);
       if (title) {
-        const diff: number = element.offsetHeight - title.offsetHeight - 10;
+        const padding = Number.parseFloat(getComputedStyle(title, null).paddingTop.replace(/[a-zA-Z]*/g, ''))
+        const border = Number.parseFloat(getComputedStyle(title, null).borderLeft.replace(/[a-zA-Z]*/g, ''));
+        const diff: number = element.offsetHeight - title.offsetHeight - (padding * 2 + border * 2);
+
+        console.log(diff)
         setCellDimensions({
           height: diff,
-          width: element.offsetWidth - 10
+          width: element.offsetWidth - (padding * 2 + border * 2)
         });
       }
     }
@@ -105,6 +113,7 @@ export default function RowComponent(props: RowProps): JSX.Element {
 
             return time === date.date.getTime();
           })}
+          abbreviated={abbreviated}
           eventClicked={eventClicked}
           date={date}
           selecting={isSelecting}
@@ -123,3 +132,5 @@ export default function RowComponent(props: RowProps): JSX.Element {
     </tr>
   );
 }
+
+

@@ -7,7 +7,7 @@ import styles from "./styles/calendar.module.scss";
 import { DayProps, CalendarEvent } from "./interfaces";
 
 export default function DayComponent(props: DayProps): JSX.Element {
-  const { date, height, width, cellRef, initialized, selected } = props;
+  const { date, height, width, cellRef, initialized, selected, abbreviated } = props;
 
   const onMouseDown: (evt: SyntheticEvent) => any = (evt) => {
     evt.preventDefault();
@@ -50,10 +50,14 @@ export default function DayComponent(props: DayProps): JSX.Element {
         styles.column,
         { [styles["this-month"]]: date.thisMonth },
         { [styles.today]: date.today },
-        { [styles.selected]: selected }
+        { [styles.selected]: selected },
+          { [styles['day-abbr']]: abbreviated }
       )}
     >
-      <div className={styles["day-head"]}>
+      <div className={classnames(
+          styles["day-head"],
+          // {[styles["day-head-abbr"]]: abbreviated}
+      )}>
         <span className={styles["date-number"]}>{date.date.getDate()}</span>
       </div>
       <div

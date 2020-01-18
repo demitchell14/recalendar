@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useCallback, useEffect, useState } from "react";
+import {RefObject, useCallback, useEffect, useRef, useState} from "react";
 
 import Headers from "./HeadersComponent";
 import Title from "./TitleComponent";
@@ -18,6 +18,7 @@ export default function CalendarComponent(props: CalendarProps): JSX.Element {
   const [activeDate, setActiveDate] = useState(undefined) as StateObject<Date | undefined>;
   const [selectedDates, setSelectedDates] = useState() as StateObject<Date[]>;
   const [isSelecting, setIsSelecting] = useState(false);
+  const calendarRef = useRef() as RefObject<HTMLDivElement>;
 
   const assignFunction: (key: number, fn: Function) => any = useCallback(
     (key: number, fn: Function) => {
@@ -27,6 +28,12 @@ export default function CalendarComponent(props: CalendarProps): JSX.Element {
     },
     [setResizeFunctions, resizeFunctions]
   ) as (key: number, fn: Function) => any;
+
+  useEffect(() => {
+    if (calendarRef.current) {
+      setUseAbbreviation(calendarRef.current.offsetWidth < 600);
+    }
+  }, []);
 
   useEffect(() => {
     const fn: (evt: Event) => void = () => {
@@ -71,11 +78,10 @@ export default function CalendarComponent(props: CalendarProps): JSX.Element {
     let timeout: any;
     const onResize: (evt?: Event) => void = (evt?) => {
       clearTimeout(timeout);
-      setTimeout(() => {
+      timeout = setTimeout(() => {
         if (evt) {
-          const currentTarget: Window | any = evt.currentTarget;
-          if (!props.forceAbbreviation) {
-            setUseAbbreviation(currentTarget.innerWidth < 600);
+          if (calendarRef.current) {
+            setUseAbbreviation(calendarRef.current.offsetWidth < 600);
           }
         }
         Object.keys(resizeFunctions).map((k) => {
@@ -161,8 +167,22 @@ export default function CalendarComponent(props: CalendarProps): JSX.Element {
     }
   };
 
+  const events = props.events ? expandEvents(props.events.map(event => {
+    let startDate = new Date(event.startDate.valueOf());
+    startDate.setMinutes(startDate.getMinutes() + startDate.getTimezoneOffset());
+    let endDate = event.endDate ? new Date(event.endDate.valueOf()) : undefined;
+    if (endDate) {
+      endDate.setMinutes(endDate.getMinutes() + endDate.getTimezoneOffset());
+    }
+    return {
+      ...event,
+      startDate,
+      endDate
+    }
+  })) : []
+
   return (
-    <div className={styles.recalendar}>
+    <div ref={calendarRef} className={styles.recalendar}>
       <Title onChange={onChangeMonth} date={activeDate} />
 
       <table className={styles.table}>
@@ -173,23 +193,14 @@ export default function CalendarComponent(props: CalendarProps): JSX.Element {
           {dateMap.map((map: DateObject[], key: number) => {
             return (
               <Row
+                  calendarRef={calendarRef}
                 key={key}
                 dates={map}
-                events={
-                  props.events
-                    ? props.events
-                        .map((event) => ({
-                          ...event,
-                          startDate: new Date(event.startDate.valueOf()),
-                          endDate: event.endDate ? new Date(event.endDate.valueOf()) : undefined
-                        }))
-                        .filter((event) => {
-                          const time: number = startOfDay(event.startDate).getTime();
-
-                          return map.map((d) => d.date.getTime()).findIndex((d) => d === time) >= 0;
-                        })
-                    : []
-                }
+                events={events.filter((event) => {
+                  const time: number = startOfDay(event.startDate).getTime();
+                  return map.map((d) => d.date.getTime()).findIndex((d) => d === time) >= 0;
+                })}
+                abbreviated={useAbbreviation}
                 eventClicked={props.eventClicked}
                 isSelecting={isSelecting}
                 selectedDates={selectedDates}
@@ -207,6 +218,28 @@ export default function CalendarComponent(props: CalendarProps): JSX.Element {
       </table>
     </div>
   );
+}
+
+function expandEvents(events: CalendarEvent[]) {
+  const newEvents: CalendarEvent[] = [];
+  events.forEach(event => {
+    const startDate = event.startDate as Date;
+    const endDate = event.endDate as Date;
+    let currentDate: Date;
+    // const duration = event.duration
+    if (endDate) {
+      if (startOfDay(endDate).getTime() > startOfDay(startDate).getTime()) {
+        currentDate = startDate;
+        while (currentDate <= endDate) {
+          newEvents.push({ ...event, startDate: currentDate, endDate: undefined })
+          currentDate = addDays(currentDate, 1);
+        }
+      }
+    } else {
+      newEvents.push(event)
+    }
+  });
+  return newEvents;
 }
 
 function generateDateMap(year: number, month: number): DateObject[][] {

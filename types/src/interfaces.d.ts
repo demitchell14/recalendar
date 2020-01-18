@@ -15,6 +15,7 @@ export interface DayProps {
     initialized: boolean;
     height?: number;
     width?: number;
+    abbreviated?: boolean;
     events: CalendarEvent[];
     eventClicked?: (event: DateObjectWithEvent) => any;
     onMouseDown?: (date: Date) => any;
@@ -48,6 +49,8 @@ export interface HeaderProps {
 export interface RowProps {
     onResize?: (fn: Function) => any;
     dates: DateObject[];
+    abbreviated?: boolean;
+    calendarRef: RefObject<HTMLDivElement>;
     selectedDates?: Date[];
     isSelecting?: boolean;
     onDayMouseDown?: (date: Date) => any;

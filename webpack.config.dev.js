@@ -10,7 +10,7 @@ module.exports = {
     devtool: "source-map",
     output: {
         path: path.resolve(__dirname, "docs", "js"),
-        filename: "[name]-[hash].js"
+        filename: "[name]-bundle.js"
     },
     module: {
         rules: [
