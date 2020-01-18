@@ -29,7 +29,7 @@
     // padding: .5rem .25rem;
     padding: 0;
 
-    width: calc(100% / 7);
+    width: calc(100% / 7 - 1px);
 
     &:last-of-type {
       border-right: none;
@@ -46,17 +46,12 @@
       color: gray;
     }
 
-    &.selected {
-      background: yellow;
-    }
-
     &.today {
       background: green;
     }
 
-    .day-head {
-      text-align: right;
-      padding: 0.35rem 0;
+    &.selected {
+      background: yellow;
     }
 
     .date-number {
@@ -70,9 +65,21 @@
       //border-bottom-right-radius: 50%;
     }
 
+    .day-head {
+      text-align: right;
+      padding: 0.35rem 0;
+      //&-abbr {
+      //  padding: 1px 0;
+      //  & .date-number {
+      //    padding: 0.25rem 0.35rem;
+      //    font-size: 12px;
+      //  }
+      //}
+    }
+
     .events {
-      display: table-caption;
-      table-layout: fixed;
+      // display: table-caption;
+      // table-layout: fixed;
       color: black;
       margin: 5px;
       overflow: hidden;
@@ -82,6 +89,21 @@
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow-x: hidden;
+    }
+
+    &.day-abbr {
+      .day-head {
+        padding: 1px 0;
+
+        & .date-number {
+          padding: .25rem .35rem;
+          font-size: 12px;
+        }
+      }
+
+      .event {
+        font-size: 14px;
+      }
     }
   }
 }
